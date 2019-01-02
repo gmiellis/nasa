@@ -6,8 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
-// import './App.css';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 
 const styles = theme => ({
   paper: {
@@ -20,12 +24,18 @@ const styles = theme => ({
     marginRight: theme.spacing.unit *5,
   },
   textField: {
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
 });
-
 
 
 class App extends Component {
@@ -34,22 +44,15 @@ class App extends Component {
     this.state = {
         query: '',
         results: [],
+        images: false,
+        video: false,
       }
     }
 
-  handleInputChange = () => {
-    this.setState({
-      query: this.search.value
-    }, () => {
-    if (this.state.query && this.state.query.length > 1) {
-      if (this.state.query.length % 2 === 0) {
-        // this.getInfo()
-      }
-    } else if (!this.state.query) {
-    }
-    })
+  handleChange = event => {
+    this.setState({ value: event.target.value });
     console.log(this.state.query)
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -57,13 +60,15 @@ class App extends Component {
      <React.Fragment>
        <CssBaseline />
        <AppBar position="static">
+       <Toolbar>
          <Typography variant="h6" color="inherit" noWrap>
            NASA Search
          </Typography>
+         </Toolbar>
        </AppBar>
 
       <Paper className={classes.paper}>
-      <form>
+      <form className={classes.form}> 
       <TextField
           id="outlined-search"
           label="Search for..."
@@ -71,24 +76,16 @@ class App extends Component {
           className={classes.textField}
           margin="normal"
           variant="outlined"
-          onChange={this.handleInputChange}
-          ref={input => this.search = input}
+          onChange={this.handleChange}
         />
-        {/* <input
-          placeholder="search for..."
-          ref={input => this.search = input}
-          onChange={this.handleInputChange}
-          /> */}
-          <input
-            type="radio"
-            name="mediaType"
-            value="images"
-          />Images
-          <input
-            type="radio"
-            name="mediaType"
-            value="video"
-          />Video
+          <RadioGroup
+            name="searchOptions"
+            value={this.state.value}
+            onChange={this.handleChange}
+          >
+          <FormControlLabel value="images" control={<Radio />} label="Images" />
+          <FormControlLabel value="video" control={<Radio />} label="Video" />
+          </RadioGroup>
       </form>
       </Paper>
       </React.Fragment>
