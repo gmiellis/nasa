@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,11 +10,21 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Fab from '@material-ui/core/Fab';
+
+import SearchIcon from '@material-ui/icons/Search';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import ImageCard from './components/imageCard';
 
 
 const styles = theme => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    // width: 400,
+  },
   paper: {
     marginTop: theme.spacing.unit * 2,
     display: 'flex',
@@ -34,6 +45,13 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  radiogroup: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  iconButton: {
+    padding: 10,
   }
 });
 
@@ -44,50 +62,102 @@ class App extends Component {
     this.state = {
         query: '',
         results: [],
-        images: false,
-        video: false,
+        searchOptions: '',
       }
     }
 
-  handleChange = event => {
-    this.setState({ value: event.target.value });
-    console.log(this.state.query)
-  };
+  componentDidMount() {
+    axios.get(`https://images-api.nasa.gov/search?q=%`)
+    .then((response) => {
+      console.log(response)
+      this.setState({
+        results: response.data.collection.items,
+      });
+      console.log(this.state.results)
+    })
+    .catch(() => {
+      alert('There was a problem. Please try again');
+    });
+    }
+
+  handleChange = name => event => {
+    this.setState({ 
+      [name]: event.target.value,
+    });
+    console.log(this.state);
+  }
+
+  handleSubmit = () => {
+    axios.get(`https://images-api.nasa.gov/search?q=${this.state.query}`)
+      .then((response) => {
+        console.log(response)
+        this.setState({
+          results: response.data.collection.items,
+        });
+        console.log(this.state.results)
+      })
+      .catch(() => {
+        alert('There was a problem. Please try again');
+      });
+  }
 
   render() {
     const { classes } = this.props;
     return (
-     <React.Fragment>
-       <CssBaseline />
-       <AppBar position="static">
-       <Toolbar>
-         <Typography variant="h6" color="inherit" noWrap>
-           NASA Search
-         </Typography>
-         </Toolbar>
-       </AppBar>
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" color="inherit" noWrap>
+              NASA Search
+            </Typography>
+          </Toolbar>
+        </AppBar>
 
-      <Paper className={classes.paper}>
-      <form className={classes.form}> 
-      <TextField
-          id="outlined-search"
-          label="Search for..."
-          type="search"
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-          onChange={this.handleChange}
-        />
-          <RadioGroup
-            name="searchOptions"
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-          <FormControlLabel value="images" control={<Radio />} label="Images" />
-          <FormControlLabel value="video" control={<Radio />} label="Video" />
-          </RadioGroup>
-      </form>
-      </Paper>
+        <Paper className={classes.paper}>
+          <form className={classes.form}>
+            <TextField
+              id="outlined-search"
+              label="Search for..."
+              className={classes.textField}
+              margin="normal"
+              variant="outlined"
+              onChange={this.handleChange('query')}
+            />
+            <RadioGroup
+              name="searchOptions"
+              onChange={this.handleChange('searchOptions')}
+              className={classes.radiogroup}
+            >
+            <FormControlLabel 
+              value="images"
+              control={<Radio />}
+              label="Images"
+            />
+            <FormControlLabel
+              value="video"
+              control={<Radio />}
+              label="Video"
+            />
+            </RadioGroup>
+              
+            <Fab
+              variant="extended"
+              size="small"
+              color="primary"
+              aria-label="Search"
+              className={classes.margin}
+              onClick={this.handleSubmit}
+            >
+              <SearchIcon className={classes.rightIcon} />
+            </Fab>
+
+          </form>
+        </Paper>
+
+        {/* <ImageCard 
+          results={this.state.results}
+        /> */}
       </React.Fragment>
     );
   }
