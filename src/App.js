@@ -62,12 +62,12 @@ class App extends Component {
     this.state = {
         query: '',
         results: [],
-        searchOptions: '',
+        searchOptions: 'image',
       }
     }
 
   componentDidMount() {
-    axios.get(`https://images-api.nasa.gov/search?q=%`)
+    axios.get(`https://images-api.nasa.gov/search?q=%&media_type=image`)
     .then((response) => {
       console.log(response)
       this.setState({
@@ -88,7 +88,7 @@ class App extends Component {
   }
 
   handleSubmit = () => {
-    axios.get(`https://images-api.nasa.gov/search?q=${this.state.query}`)
+    axios.get(`https://images-api.nasa.gov/search?q=${this.state.query}&media=${this.state.searchOptions}`)
       .then((response) => {
         console.log(response)
         this.setState({
@@ -124,13 +124,15 @@ class App extends Component {
               variant="outlined"
               onChange={this.handleChange('query')}
             />
+
             <RadioGroup
               name="searchOptions"
               onChange={this.handleChange('searchOptions')}
               className={classes.radiogroup}
+              value={this.state.searchOptions}
             >
             <FormControlLabel 
-              value="images"
+              value="image"
               control={<Radio />}
               label="Images"
             />
@@ -155,9 +157,17 @@ class App extends Component {
           </form>
         </Paper>
 
-        {/* <ImageCard 
-          results={this.state.results}
-        /> */}
+        <Paper>
+          {
+           this.state.results.map(id => (
+              <div key={id.data[0].nasa_id}>
+                {id.data[0].title}
+                {/* {id.links[0].href} */}
+                <img src={id.links[0].href}></img>
+              </div>
+            )) }
+    
+        </Paper>
       </React.Fragment>
     );
   }
