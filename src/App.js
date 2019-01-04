@@ -88,7 +88,7 @@ class App extends Component {
   }
 
   handleSubmit = () => {
-    axios.get(`https://images-api.nasa.gov/search?q=${this.state.query}&media=${this.state.searchOptions}`)
+    axios.get(`https://images-api.nasa.gov/search?q=${this.state.query}&media_type=${this.state.searchOptions}`)
       .then((response) => {
         console.log(response)
         this.setState({
