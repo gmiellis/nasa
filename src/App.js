@@ -11,11 +11,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Fab from '@material-ui/core/Fab';
-
 import SearchIcon from '@material-ui/icons/Search';
-
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ImageCard from './components/imageCard';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({
@@ -52,7 +55,18 @@ const styles = theme => ({
   },
   iconButton: {
     padding: 10,
-  }
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
 });
 
 
@@ -156,17 +170,32 @@ class App extends Component {
 
           </form>
         </Paper>
-
-        <Paper>
-          {
-           this.state.results.map(id => (
-              <div key={id.data[0].nasa_id}>
-                {id.data[0].title}
-                {/* {id.links[0].href} */}
-                <img src={id.links[0].href}></img>
-              </div>
-            )) }
-    
+        <Paper className={classes.paper}>
+            <Grid container spacing ={40}>
+            
+              {
+              this.state.results.map(id => (
+                <Grid item key={id.data[0]} sm={6} md={4} lg={3}>
+                  <Card classname={classes.card}>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image={id.links[0].href}
+                      title={id.data[0].title}
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {id.data[0].title} 
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small" color="primary">
+                        View
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+                )) }
+            </Grid>
         </Paper>
       </React.Fragment>
     );
