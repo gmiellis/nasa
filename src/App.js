@@ -115,6 +115,10 @@ class App extends Component {
       });
   }
 
+  handleLink = () => {
+
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -175,8 +179,8 @@ class App extends Component {
             
               {
               this.state.results.map(id => (
-                <Grid item key={id.data[0]} sm={6} md={4} lg={3}>
-                  <Card classname={classes.card}>
+                <Grid item key={id.data[0].nasa_id} sm={6} md={4} lg={3}>
+                  <Card className={classes.card}>
                     <CardMedia
                       className={classes.cardMedia}
                       image={id.links[0].href}
@@ -188,7 +192,12 @@ class App extends Component {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button size="small" color="primary">
+                      <Button
+                        size="small"
+                        color="primary"
+                        target="_blank" 
+                        href={`https://images.nasa.gov/details-${id.data[0].nasa_id}`}
+                      >
                         View
                       </Button>
                     </CardActions>
