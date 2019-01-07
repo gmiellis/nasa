@@ -196,7 +196,7 @@ class App extends Component {
                         size="small"
                         color="primary"
                         target="_blank" 
-                        href={`https://images.nasa.gov/details-${id.data[0].nasa_id}`}
+                        href={`https://images.nasa.gov/details-${id.data[0].nasa_id}.html`}
                       >
                         View
                       </Button>
